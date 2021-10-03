@@ -1,0 +1,220 @@
+-- Geração de Modelo físico
+-- Sql ANSI 2003 - brModelo.
+
+
+
+CREATE TABLE Materia (
+Cod_Materia integer PRIMARY KEY,
+Cod_Curso integer,
+Nome Varchar(50)
+);
+
+CREATE TABLE Exemplar (
+Cod_Exemplar integer PRIMARY KEY,
+Cod_Biblioteca integer,
+ISBN integer
+);
+
+CREATE TABLE Livros (
+ISBN integer PRIMARY KEY,
+Titulo_Livro Varchar(50),
+Ano_Lancamento integer,
+Cod_Editora integer
+);
+
+CREATE TABLE Editora (
+Cod_Editora integer PRIMARY KEY,
+Nome_Editora Varchar(50)
+);
+
+CREATE TABLE Biblioteca (
+Cod_Biblioteca integer PRIMARY KEY,
+Cod_Universidade integer,
+Nome Varchar(50)
+);
+
+CREATE TABLE Aluno (
+Cod_Aluno integer PRIMARY KEY,
+Cod_Universidade integer,
+Cod_Curso integer,
+Nome_Aluno Varchar(50),
+Ano_entrada integer,
+Tempo_Maximo integer
+);
+
+CREATE TABLE Curso (
+Cod_Curso integer PRIMARY KEY,
+Cod_Universidade integer,
+Duracao integer,
+Nome varchar(50)
+);
+
+CREATE TABLE Universidade (
+Cod_Universidade integer PRIMARY KEY,
+Nome Varchar(50)
+);
+
+CREATE TABLE Autor (
+Cod_Autor integer PRIMARY KEY,
+Nome_Autor Varchar(50)
+);
+
+CREATE TABLE Historico (
+Numero_semestre integer,
+Cod_Materia integer,
+Cod_Aluno integer,
+nota integer,
+Ano_semestre Varchar(50),
+PRIMARY KEY(Numero_semestre,Cod_Materia,Cod_Aluno),
+FOREIGN KEY(Cod_Materia) REFERENCES Materia (Cod_Materia),
+FOREIGN KEY(Cod_Aluno) REFERENCES Aluno (Cod_Aluno)
+);
+
+CREATE TABLE Emprestimo (
+Data Timestamp,
+Cod_Exemplar integer,
+Cod_Aluno integer,
+PRIMARY KEY(Data,Cod_Exemplar,Cod_Aluno),
+FOREIGN KEY(Cod_Exemplar) REFERENCES Exemplar (Cod_Exemplar),
+FOREIGN KEY(Cod_Aluno) REFERENCES Aluno (Cod_Aluno)
+);
+
+CREATE TABLE Autoria (
+Cod_Autor integer,
+ISBN integer,
+PRIMARY KEY(Cod_Autor,ISBN),
+FOREIGN KEY(Cod_Autor) REFERENCES Autor(Cod_Autor),
+FOREIGN KEY(ISBN) REFERENCES Livros (ISBN)
+);
+
+ALTER TABLE Materia ADD FOREIGN KEY(Cod_Curso) REFERENCES Curso (Cod_Curso);
+ALTER TABLE Exemplar ADD FOREIGN KEY(Cod_Biblioteca) REFERENCES Biblioteca (Cod_Biblioteca);
+ALTER TABLE Exemplar ADD FOREIGN KEY(ISBN) REFERENCES Livros (ISBN);
+ALTER TABLE Livros ADD FOREIGN KEY(Cod_Editora) REFERENCES Editora (Cod_Editora);
+ALTER TABLE Biblioteca ADD FOREIGN KEY(Cod_Universidade) REFERENCES Universidade (Cod_Universidade);
+ALTER TABLE Aluno ADD FOREIGN KEY(Cod_Universidade) REFERENCES Universidade (Cod_Universidade);
+ALTER TABLE Aluno ADD FOREIGN KEY(Cod_Curso) REFERENCES Curso (Cod_Curso);
+ALTER TABLE Curso ADD FOREIGN KEY(Cod_Universidade) REFERENCES Universidade (Cod_Universidade);
+
+CREATE SEQUENCE seq_universidade INCREMENT BY 1 MINVALUE 1 START 1;
+ALTER TABLE universidade ALTER COLUMN cod_universidade SET DEFAULT NEXTVAL('seq_universidade');
+
+CREATE SEQUENCE seq_aluno INCREMENT BY 1 MINVALUE 1 START 1;
+ALTER TABLE aluno ALTER COLUMN cod_aluno SET DEFAULT NEXTVAL('seq_aluno');
+
+CREATE SEQUENCE seq_autor INCREMENT BY 1 MINVALUE 1 START 1;
+ALTER TABLE autor ALTER COLUMN cod_autor SET DEFAULT NEXTVAL('seq_autor');
+
+CREATE SEQUENCE seq_biblioteca INCREMENT BY 1 MINVALUE 1 START 1;
+ALTER TABLE biblioteca ALTER COLUMN cod_biblioteca SET DEFAULT NEXTVAL('seq_biblioteca');
+
+CREATE SEQUENCE seq_curso INCREMENT BY 1 MINVALUE 1 START 1;
+ALTER TABLE curso ALTER COLUMN cod_curso SET DEFAULT NEXTVAL('seq_curso');
+
+CREATE SEQUENCE seq_editora INCREMENT BY 1 MINVALUE 1 START 1;
+ALTER TABLE editora ALTER COLUMN cod_editora SET DEFAULT NEXTVAL('seq_editora');
+
+CREATE SEQUENCE seq_exemplar INCREMENT BY 1 MINVALUE 1 START 1;
+ALTER TABLE exemplar ALTER COLUMN cod_exemplar SET DEFAULT NEXTVAL('seq_exemplar');
+
+CREATE SEQUENCE seq_livros INCREMENT BY 1 MINVALUE 1 START 1;
+ALTER TABLE livros ALTER COLUMN isbn SET DEFAULT NEXTVAL('seq_livros');
+
+CREATE SEQUENCE seq_materia INCREMENT BY 1 MINVALUE 1 START 1;
+ALTER TABLE materia ALTER COLUMN cod_materia SET DEFAULT NEXTVAL('seq_materia');
+
+insert into universidade(nome) values('UFSC');
+insert into universidade(nome) values('UDESC');
+
+insert into curso(cod_universidade,duracao,nome) values (1,3,'TIC');
+insert into curso(cod_universidade,duracao,nome) values (2,6,'ENC');
+insert into curso(cod_universidade,duracao,nome) values (1,5,'ENE');
+insert into curso(cod_universidade,duracao,nome) values (2,4,'FISIO');
+
+insert into aluno (nome_aluno,ano_entrada,tempo_maximo,cod_universidade,cod_curso)values ('everton',2015,2021,1,1);
+insert into aluno (nome_aluno,ano_entrada,tempo_maximo,cod_universidade,cod_curso)values ('joão',2016,2023,2,4);
+insert into aluno (nome_aluno,ano_entrada,tempo_maximo,cod_universidade,cod_curso)values ('roberto',2012,2020,1,3);
+insert into aluno (nome_aluno,ano_entrada,tempo_maximo,cod_universidade,cod_curso)values ('thomas',2011,2019,2,1);
+insert into aluno (nome_aluno,ano_entrada,tempo_maximo,cod_universidade,cod_curso)values ('Natalia',2009,2014,1,1);
+insert into aluno (nome_aluno,ano_entrada,tempo_maximo,cod_universidade,cod_curso)values ('Karen',2014,2021,2,2);
+insert into aluno (nome_aluno,ano_entrada,tempo_maximo,cod_universidade,cod_curso)values ('Joana',2015,2022,2,4);
+insert into aluno (nome_aluno,ano_entrada,tempo_maximo,cod_universidade,cod_curso)values ('Fred Kruger',2013,2019,1,1);
+insert into aluno (nome_aluno,ano_entrada,tempo_maximo,cod_universidade,cod_curso)values ('jeison',2012,2023,2,2);
+insert into aluno (nome_aluno,ano_entrada,tempo_maximo,cod_universidade,cod_curso)values ('Noname',2015,2022,2,4);
+
+insert into autor (nome_autor) values ('Rick Riordan');
+insert into autor (nome_autor) values ('George R.R Martin');
+insert into autor (nome_autor) values ('Abraham Silberschatz');
+insert into autor (nome_autor) values ('Henry F.Korth');
+
+insert into biblioteca (nome,cod_universidade) values ('Setorial UFSC',1);
+insert into biblioteca (nome,cod_universidade) values ('Setorial UDESC',2);
+
+insert into editora (nome_editora)values ('Editora Intriseca');
+insert into editora (nome_editora)values ('Editora Campus');
+
+insert into livros (titulo_livro,ano_lancamento,cod_editora)values ('Banco de dados',2009,2);
+insert into livros (titulo_livro,ano_lancamento,cod_editora)values ('Fisioterapia',2010,1);
+insert into livros (titulo_livro,ano_lancamento,cod_editora)values ('ARDUINO',2008,1);
+insert into livros (titulo_livro,ano_lancamento,cod_editora)values ('Estrutura de dados',2011,2);
+insert into livros (titulo_livro,ano_lancamento,cod_editora)values ('Energias Renovaveis',2012,1);
+
+insert into autoria (cod_autor,isbn) values (3,1);
+insert into autoria (cod_autor,isbn) values (4,1);
+insert into autoria (cod_autor,isbn) values (1,5);
+insert into autoria (cod_autor,isbn) values (2,4);
+insert into autoria (cod_autor,isbn) values (4,2);
+insert into autoria (cod_autor,isbn) values (3,3);
+
+insert into exemplar (cod_biblioteca,isbn) values (1,1);
+insert into exemplar (cod_biblioteca,isbn) values (1,5);
+insert into exemplar (cod_biblioteca,isbn) values (1,4);
+insert into exemplar (cod_biblioteca,isbn) values (1,3);
+insert into exemplar (cod_biblioteca,isbn) values (2,3);
+insert into exemplar (cod_biblioteca,isbn) values (2,2);
+insert into exemplar (cod_biblioteca,isbn) values (2,1);
+insert into exemplar (cod_biblioteca,isbn) values (2,4);
+
+
+insert into emprestimo (data,cod_exemplar,cod_aluno) values (current_timestamp,1,1);
+insert into emprestimo (data,cod_exemplar,cod_aluno) values (current_timestamp,2,3);
+insert into emprestimo (data,cod_exemplar,cod_aluno) values (current_timestamp,3,7);
+insert into emprestimo (data,cod_exemplar,cod_aluno) values (current_timestamp,4,5);
+insert into emprestimo (data,cod_exemplar,cod_aluno) values (current_timestamp,5,4);
+insert into emprestimo (data,cod_exemplar,cod_aluno) values (current_timestamp,6,2);
+insert into emprestimo (data,cod_exemplar,cod_aluno) values (current_timestamp,7,9);
+insert into emprestimo (data,cod_exemplar,cod_aluno) values (current_timestamp,8,10);
+
+insert into materia (cod_curso,nome)values (1,'Banco de dados');
+insert into materia (cod_curso,nome)values (3,'Anatomia');
+insert into materia (cod_curso,nome)values (4,'Energia Eolica');
+insert into materia (cod_curso,nome)values (2,'Projeto Operacional');
+insert into materia (cod_curso,nome)values (1,'Inovação');
+insert into materia (cod_curso,nome)values (4,'Gestão de projetos');
+insert into materia (cod_curso,nome)values (2,'Banco de dados');
+insert into materia (cod_curso,nome)values (3,'Fisio');
+
+
+
+insert into historico (numero_semestre,cod_materia,cod_aluno,nota,ano_semestre) values (1,1,1,8,'2015.1');
+insert into historico (numero_semestre,cod_materia,cod_aluno,nota,ano_semestre) values (2,5,1,5,'2015.2');
+insert into historico (numero_semestre,cod_materia,cod_aluno,nota,ano_semestre) values (1,3,2,4,'2015.1');
+insert into historico (numero_semestre,cod_materia,cod_aluno,nota,ano_semestre) values (2,6,2,8,'2015.2');
+insert into historico (numero_semestre,cod_materia,cod_aluno,nota,ano_semestre) values (3,2,3,6,'2014.2');
+insert into historico (numero_semestre,cod_materia,cod_aluno,nota,ano_semestre) values (4,8,3,9,'2015.1');
+insert into historico (numero_semestre,cod_materia,cod_aluno,nota,ano_semestre) values (5,5,4,4,'2015.1');
+insert into historico (numero_semestre,cod_materia,cod_aluno,nota,ano_semestre) values (6,1,4,6,'2015.2');
+insert into historico (numero_semestre,cod_materia,cod_aluno,nota,ano_semestre) values (1,1,5,9,'2015.1');
+insert into historico (numero_semestre,cod_materia,cod_aluno,nota,ano_semestre) values (2,5,5,9,'2015.1');
+insert into historico (numero_semestre,cod_materia,cod_aluno,nota,ano_semestre) values (3,7,6,3,'2016.1');
+insert into historico (numero_semestre,cod_materia,cod_aluno,nota,ano_semestre) values (3,4,6,7,'2016.1');
+insert into historico (numero_semestre,cod_materia,cod_aluno,nota,ano_semestre) values (7,3,7,8,'2014.1');
+insert into historico (numero_semestre,cod_materia,cod_aluno,nota,ano_semestre) values (8,6,7,7,'2014.2');
+insert into historico (numero_semestre,cod_materia,cod_aluno,nota,ano_semestre) values (1,5,8,5,'2015.1');
+insert into historico (numero_semestre,cod_materia,cod_aluno,nota,ano_semestre) values (3,5,8,8,'2016.1');
+insert into historico (numero_semestre,cod_materia,cod_aluno,nota,ano_semestre) values (3,4,9,9,'2015.1');
+insert into historico (numero_semestre,cod_materia,cod_aluno,nota,ano_semestre) values (5,7,9,6,'2016.1');
+insert into historico (numero_semestre,cod_materia,cod_aluno,nota,ano_semestre) values (6,3,10,8,'2016.1');
+insert into historico (numero_semestre,cod_materia,cod_aluno,nota,ano_semestre) values (7,6,10,7,'2016.2');
+
+
